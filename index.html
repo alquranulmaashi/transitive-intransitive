@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intransitive &amp; Transitive Verbs — Interactive Lesson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#137a54; --green-d:#0d5a3d; --green-l:#e4f4ec;
+    --blue:#1668a8;  --blue-d:#0f4e80; --blue-l:#e3f0fa;
+    --amber:#b7770a; --amber-l:#fbf0da;
+    --rose:#c0396b;  --rose-d:#93264f; --rose-l:#fbe6ee;
+    --teal:#0e7c86;  --teal-d:#0a5f67; --teal-l:#ddf1f2;
+    --ver:#d9480f; --ver-d:#a8360a; --ver-l:#fde9df;
+    --gold:#c9a227;
+    --ink:#233436; --muted:#5d7175;
+    --bg:#f6f4ec; --card:#ffffff; --line:#e5e2d6;
+    --shadow:0 6px 22px rgba(30,50,45,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Nunito',system-ui,sans-serif;
+    background:
+      radial-gradient(1200px 500px at 100% -10%, #fbeadf 0, transparent 60%),
+      radial-gradient(900px 500px at -10% 110%, #f7efe1 0, transparent 55%),
+      var(--bg);
+    color:var(--ink); line-height:1.55; min-height:100vh; padding:22px 16px 60px;
+  }
+  .ar{font-family:'Amiri',serif; direction:rtl; unicode-bidi:isolate;}
+  .wrap{max-width:960px; margin:0 auto;}
+
+  header.top{display:flex; align-items:center; gap:14px; margin-bottom:18px;}
+  .badge{flex:0 0 auto; width:46px; height:46px; border-radius:13px;
+    background:linear-gradient(145deg,var(--ver),var(--ver-d));
+    color:#fff; display:grid; place-items:center; font-weight:800; font-size:22px; box-shadow:var(--shadow);}
+  header.top h1{font-size:19px; font-weight:800; line-height:1.2}
+  header.top p{font-size:14px; color:var(--muted)}
+  .progress{height:8px; background:#e7e3d5; border-radius:99px; overflow:hidden; margin:6px 0 20px}
+  .progress > i{display:block; height:100%; width:0; background:linear-gradient(90deg,var(--gold),var(--ver)); border-radius:99px; transition:width .4s ease}
+
+  .dots{display:flex; flex-wrap:wrap; gap:7px; justify-content:center; margin-bottom:18px}
+  .dots button{border:none; cursor:pointer; font:inherit; font-size:12px; font-weight:700; padding:5px 11px; border-radius:99px; background:#eae6d8; color:var(--muted); transition:.2s;}
+  .dots button.active{background:var(--ver); color:#fff; box-shadow:var(--shadow)}
+  .dots button:hover{background:#ded9c8}
+  .dots button.active:hover{background:var(--ver)}
+
+  .slide{display:none; animation:pop .35s ease}
+  .slide.show{display:block}
+  @keyframes pop{from{opacity:0; transform:translateY(10px)}to{opacity:1; transform:none}}
+  .panel{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:26px 24px}
+  .eyebrow{display:inline-block; font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; color:var(--ver-d); background:var(--ver-l); padding:5px 12px; border-radius:99px; margin-bottom:12px}
+  h2.title{font-size:21px; font-weight:800; margin-bottom:4px}
+  h2.title .ar{font-size:27px; display:block; margin-bottom:2px}
+  .lead{color:var(--muted); font-size:14.5px; margin-bottom:16px}
+
+  .hero{text-align:center; padding:34px 20px}
+  .hero .big{font-size:40px; color:var(--ver-d); font-weight:700; margin-bottom:8px}
+  .hero .sub{font-size:19px; color:var(--amber); font-weight:800; margin-bottom:16px}
+  .mini{padding:10px 15px; border-radius:13px; font-weight:800; font-size:13px; display:inline-block}
+  .chips{display:flex; gap:9px; justify-content:center; flex-wrap:wrap; margin-top:10px}
+
+  .grid{display:grid; gap:11px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g3{grid-template-columns:1fr}}
+  @media(max-width:560px){.g2{grid-template-columns:1fr}}
+
+  /* role colours */
+  .sb{color:var(--blue-d)} .vb{color:var(--rose-d)} .ob{color:var(--teal-d)} .pp{color:var(--amber)}
+  .legend{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin:6px 0 2px; font-size:12px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:6px}
+  .legend i{width:12px; height:12px; border-radius:4px; display:inline-block}
+
+  /* compare cards */
+  .cmp{border-radius:16px; padding:18px 14px; text-align:center; border:1.5px solid}
+  .cmp .nm{font-family:'Amiri',serif; font-size:26px; font-weight:700}
+  .cmp .en{font-weight:800; font-size:13.5px; margin-bottom:8px}
+  .cmp .phrase{font-family:'Amiri',serif; font-size:28px; font-weight:700; background:#fff; border-radius:12px; padding:6px 8px; margin:8px 0}
+  .cmp .flow{font-size:13px; color:var(--ink); font-weight:700; margin-top:6px}
+  .cmp .desc{font-size:12px; color:var(--muted); margin-top:4px}
+  .cmp-l{border-color:var(--blue-l); background:var(--blue-l)} .cmp-l .nm,.cmp-l .en{color:var(--blue-d)}
+  .cmp-t{border-color:var(--ver-l); background:var(--ver-l)} .cmp-t .nm,.cmp-t .en{color:var(--ver-d)}
+
+  .exrow{display:flex; align-items:center; justify-content:space-between; gap:12px; background:#fff; border:1px solid var(--line); border-radius:13px; padding:10px 14px; margin-bottom:8px}
+  .exrow .phrase{font-family:'Amiri',serif; font-size:24px; font-weight:700}
+  .exrow .gl{font-size:12px; color:var(--muted); font-style:italic; text-align:right}
+  @media(max-width:600px){.exrow{flex-direction:column; align-items:center; text-align:center} .exrow .gl{text-align:center}}
+
+  .rule{border-radius:14px; padding:12px 14px; margin-bottom:14px; font-size:13.5px}
+  .rule b.h{display:block; font-size:11px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:3px}
+  .rule .ar{font-size:17px; font-weight:700}
+  .rule-ver{background:var(--ver-l)} .rule-ver b.h{color:var(--ver-d)}
+  .rule-blue{background:var(--blue-l)} .rule-blue b.h{color:var(--blue-d)}
+  .rule-teal{background:var(--teal-l)} .rule-teal b.h{color:var(--teal-d)}
+  .rule-amber{background:var(--amber-l)} .rule-amber b.h{color:var(--amber)}
+  .rule-rose{background:var(--rose-l)} .rule-rose b.h{color:var(--rose-d)}
+
+  /* tap-to-transform cards */
+  .icard{border:1.5px solid var(--line); border-radius:16px; background:#fff; padding:14px; text-align:center; cursor:pointer; transition:.2s}
+  .icard:hover{border-color:var(--ver)}
+  .icard .src{font-family:'Amiri',serif; font-size:21px; color:var(--muted); font-weight:700}
+  .icard .down{color:var(--ver); font-weight:800; margin:4px 0; opacity:.35; transition:.25s}
+  .icard.open .down{opacity:1}
+  .icard .res{font-family:'Amiri',serif; font-size:24px; font-weight:700; color:var(--ver-d); max-height:0; opacity:0; overflow:hidden; transition:.35s}
+  .icard.open .res{max-height:90px; opacity:1}
+  .icard .gloss{font-size:11.5px; color:var(--muted); font-style:italic; max-height:0; opacity:0; overflow:hidden; transition:.35s}
+  .icard.open .gloss{max-height:60px; opacity:1; margin-top:3px}
+  .icard .tap{font-size:10.5px; color:var(--muted); font-weight:700; margin-top:6px}
+  .icard.open .tap{display:none}
+  .icard.bad .res{color:var(--rose-d)}
+
+  /* three ways cards */
+  .way{background:#fff; border:1.5px solid var(--line); border-radius:16px; padding:14px; text-align:center; border-top:4px solid var(--ver)}
+  .way .tg{display:inline-block; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; background:var(--ver-l); color:var(--ver-d); padding:2px 9px; border-radius:99px}
+  .way .nm{font-family:'Amiri',serif; font-size:22px; font-weight:700; color:var(--ver-d); margin-top:6px}
+  .way .pt{font-family:'Amiri',serif; font-size:20px; font-weight:700; color:var(--muted)}
+  .way .ex{font-family:'Amiri',serif; font-size:22px; font-weight:700; margin-top:8px; background:var(--bg); border-radius:10px; padding:6px}
+  .way .gl{font-size:11.5px; color:var(--muted); margin-top:5px}
+
+  .qbox{background:var(--green-l); border:1px solid #cfe6da; border-radius:14px; padding:12px 14px; margin-top:12px}
+  .qbox .tag{font-size:10.5px; font-weight:800; color:var(--green-d); text-transform:uppercase; letter-spacing:.04em; margin-bottom:4px}
+  .qbox .qitem{padding:7px 0; border-bottom:1px dashed #cfe6da}
+  .qbox .qitem:last-child{border-bottom:none; padding-bottom:0}
+  .qbox .line{font-family:'Amiri',serif; font-size:20px; font-weight:700; color:var(--green-d); line-height:1.8}
+  .qbox .hl{padding:0 4px; border-radius:5px; background:#fff; border:1px solid #b9dbc7}
+  .qbox small{display:block; color:var(--muted); font-style:italic; font-size:11.5px; margin-top:2px}
+
+  .note{margin-top:10px; background:#fffbf0; border:1px solid #efe6c4; border-radius:14px; padding:12px 14px; font-size:13px; display:flex; gap:10px}
+  .note .ic{flex:0 0 auto; width:26px; height:26px; border-radius:8px; background:var(--gold); color:#fff; display:grid; place-items:center; font-weight:800}
+
+  table.recap{width:100%; border-collapse:separate; border-spacing:0 7px; font-size:13px}
+  table.recap td{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:9px 12px; vertical-align:top}
+  table.recap td:first-child{border-left:1px solid var(--line); border-radius:10px 0 0 10px; width:26%; font-weight:800}
+  table.recap td:last-child{border-right:1px solid var(--line); border-radius:0 10px 10px 0}
+  table.recap .w{font-family:'Amiri',serif; font-size:17px; font-weight:700; color:var(--ver-d)}
+
+  .quiz .q-word{text-align:center; font-family:'Amiri',serif; font-size:34px; font-weight:700; margin:8px 0; background:var(--bg); border:1.5px solid var(--line); border-radius:16px; padding:16px 10px}
+  .quiz .q-for{text-align:center; font-size:14px; color:var(--muted); margin-bottom:12px}
+  .quiz .q-for b{color:var(--ver-d)}
+  .q-count{text-align:center; color:var(--muted); font-size:13px; font-weight:700; margin-bottom:10px}
+  .opts{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+  @media(max-width:560px){.opts{grid-template-columns:1fr}}
+  .opt{border:2px solid var(--line); background:#fff; border-radius:14px; padding:13px 10px; cursor:pointer; font:inherit; font-weight:800; font-size:14.5px; transition:.15s; text-align:center}
+  .opt .ar{font-size:20px; display:block}
+  .opt:hover{border-color:var(--ver); background:#fef6f1}
+  .opt:disabled{cursor:default}
+  .opt.correct{background:var(--green); color:#fff; border-color:var(--green)}
+  .opt.wrong{background:var(--rose-l); border-color:var(--rose); color:var(--rose)}
+  .fb{margin-top:14px; border-radius:14px; padding:13px 15px; font-size:14px; font-weight:600; display:none}
+  .fb.show{display:block; animation:pop .3s}
+  .fb.ok{background:var(--green-l); color:var(--green-d)}
+  .fb.no{background:var(--rose-l); color:var(--rose)}
+  .scoreline{text-align:center; margin-top:16px; font-weight:800; color:var(--green-d)}
+
+  .keyrow{display:flex; gap:14px; align-items:flex-start; background:#fff; border:1px solid var(--line); border-radius:14px; padding:12px 16px; margin-bottom:9px}
+  .keyrow .qn{flex:0 0 auto; width:30px; height:30px; border-radius:50%; background:var(--ver-l); color:var(--ver-d); font-weight:800; display:grid; place-items:center; font-size:13px}
+  .keyrow .body{flex:1}
+  .keyrow .phrase{font-family:'Amiri',serif; font-size:21px; font-weight:700; color:var(--ink)}
+  .keyrow .verdict{display:inline-block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; padding:3px 10px; border-radius:99px; margin-left:10px; vertical-align:middle; background:var(--ver-l); color:var(--ver-d)}
+  .keyrow .why{font-size:12.5px; color:var(--muted); margin-top:4px}
+
+  .nav{display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:20px}
+  .btn{border:none; cursor:pointer; font:inherit; font-weight:800; font-size:15px; padding:12px 22px; border-radius:13px; transition:.2s}
+  .btn.prev{background:#eae6d8; color:var(--ink)} .btn.prev:hover{background:#ded9c8}
+  .btn.next{background:linear-gradient(145deg,var(--ver),var(--ver-d)); color:#fff; box-shadow:var(--shadow)}
+  .btn.next:hover{filter:brightness(1.1)}
+  .btn:disabled{opacity:.4; cursor:default}
+  .kbd-hint{text-align:center; color:var(--muted); font-size:12px; margin-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="badge">⇢</div>
+    <div>
+      <h1>Intransitive &amp; Transitive Verbs</h1>
+      <p class="ar" style="font-size:15px">الفِعْلُ اللَّازِمُ وَالفِعْلُ المُتَعَدِّي</p>
+    </div>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+  <div class="dots" id="dots"></div>
+
+  <!-- 0 INTRO -->
+  <section class="slide show">
+    <div class="panel hero">
+      <div class="ar big">اللَّازِمُ وَالمُتَعَدِّي</div>
+      <div class="sub">Does the Action Stop, or Pass On?</div>
+      <p class="lead" style="max-width:620px;margin:0 auto 16px">
+        Some verbs are complete with just a doer — <span class="ar" style="font-size:20px">جَلَسَ إِبْرَاهِيمُ</span> — and some
+        need something to act <b>on</b> — <span class="ar" style="font-size:20px">قَرَأَ إِبْرَاهِيمُ كِتَابَهُ</span>.
+        Learn to tell them apart, and the three ways Arabic turns the first kind into the second, with verses from the Qur’an.
+      </p>
+      <div class="chips">
+        <span class="mini" style="background:var(--blue-l);color:var(--blue-d)">لازم — stays</span>
+        <span class="mini" style="background:var(--ver-l);color:var(--ver-d)">متعدٍّ — passes on</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 BIG IDEA -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow">The big idea</span>
+      <h2 class="title"><span class="ar">يَقِفُ الفِعْلُ أَمْ يَتَعَدَّى؟</span>The action stays with the doer — or reaches an object</h2>
+      <div class="grid g2" style="margin-top:12px">
+        <div class="cmp cmp-l">
+          <div class="nm">لَازِم</div><div class="en">Intransitive</div>
+          <div class="phrase"><span class="vb">جَلَسَ</span> <span class="sb">إِبْرَاهِيمُ</span></div>
+          <div class="flow">doer ⟲</div>
+          <div class="desc">Ibrahim sat. Nothing receives the action.</div>
+        </div>
+        <div class="cmp cmp-t">
+          <div class="nm">مُتَعَدٍّ</div><div class="en">Transitive</div>
+          <div class="phrase"><span class="vb">قَرَأَ</span> <span class="sb">إِبْرَاهِيمُ</span> <span class="ob">كِتَابَهُ</span></div>
+          <div class="flow">doer ➜ object</div>
+          <div class="desc">Ibrahim read his book. The action lands on something.</div>
+        </div>
+      </div>
+      <div class="legend"><span><i style="background:var(--rose-l);border:1px solid var(--rose)"></i> verb</span><span><i style="background:var(--blue-l);border:1px solid var(--blue)"></i> doer (subject)</span><span><i style="background:var(--teal-l);border:1px solid var(--teal)"></i> object</span></div>
+      <div class="note"><span class="ic">i</span><div>The thing that receives the action is the <b>object</b> (<span class="ar" style="font-size:17px">المَفْعُولُ بِهِ</span>), and it takes the <b>accusative</b> ending — <span class="ar" style="font-size:17px">كِتَابَهُ</span> ends in fatḥa.</div></div>
+    </div>
+  </section>
+
+  <!-- 2 INTRANSITIVE -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--blue-d);background:var(--blue-l)">Intransitive · لَازِم</span>
+      <h2 class="title"><span class="ar">الفِعْلُ اللَّازِم</span>Complete with just a doer</h2>
+      <div class="exrow"><span class="phrase"><span class="vb">جَلَسَ</span> <span class="sb">إِبْرَاهِيمُ</span></span><span class="gl">Ibrahim sat</span></div>
+      <div class="exrow"><span class="phrase"><span class="vb">خَفَّتْ</span> <span class="sb">مَوَازِينُهُ</span></span><span class="gl">his scales are light</span></div>
+      <div class="exrow"><span class="phrase"><span class="vb">جَلَسَ</span> <span class="sb">إِبْرَاهِيمُ</span> <span class="pp">عَلَى الكُرْسِيِّ</span></span><span class="gl">Ibrahim sat on the chair</span></div>
+      <div class="exrow"><span class="phrase"><span class="vb">ذَهَبَ</span> <span class="sb">عُمَرُ</span> <span class="pp">إِلَى السُّوقِ</span></span><span class="gl">Umar went to the market</span></div>
+      <div class="legend"><span><i style="background:var(--rose-l);border:1px solid var(--rose)"></i> verb</span><span><i style="background:var(--blue-l);border:1px solid var(--blue)"></i> doer</span><span><i style="background:var(--amber-l);border:1px solid var(--amber)"></i> preposition + noun</span></div>
+      <div class="note"><span class="ic">!</span><div>The amber phrases (<span class="ar" style="font-size:17px">عَلَى الكُرْسِيِّ، إِلَى السُّوقِ</span>) do <b>not</b> make the verb transitive. An intransitive verb reaches a noun only through a <b>preposition</b>, and the noun after it is <b>genitive</b>, not accusative.</div></div>
+      <div class="qbox"><div class="tag">From the Qur’an</div>
+        <div class="qitem"><div class="line">وَمَنْ <span class="hl">خَفَّتْ</span> مَوَازِينُهُ فَأُولَٰئِكَ الَّذِينَ خَسِرُوا أَنفُسَهُمْ</div><small>Sūrah al-Mu’minūn, 23:103 (also 7:9) — “and those whose scales are light are the ones who have lost themselves.” This is the deck’s own example.</small></div>
+        <div class="qitem"><div class="line">وَذَا النُّونِ إِذ <span class="hl">ذَّهَبَ</span> مُغَاضِبًا</div><small>Sūrah al-Anbiyā’, 21:87 — “and [remember] Dhun-Nun, when he went off in anger.” No object.</small></div>
+        <div class="qitem"><div class="line"><span class="hl">فَخَرَجَ</span> <span class="hl" style="background:var(--amber-l)">مِنْهَا</span> خَائِفًا يَتَرَقَّبُ</div><small>Sūrah al-Qaṣaṣ, 28:21 — “so he left it, fearful and watchful.” مِنْهَا is a preposition + pronoun (genitive).</small></div>
+        <div class="qitem"><div class="line"><span class="hl">فَسَجَدُوا</span> إِلَّا إِبْلِيسَ</div><small>Sūrah al-Baqarah, 2:34 — “so they prostrated, except Iblīs.”</small></div>
+        <div class="qitem"><div class="line"><span class="hl">اذْهَبْ</span> <span class="hl" style="background:var(--amber-l)">إِلَىٰ فِرْعَوْنَ</span> إِنَّهُ طَغَىٰ</div><small>Sūrah Ṭā-Hā, 20:24 — “Go to Pharaoh, for he has transgressed.” The same verb ذَهَبَ + إِلَى as the deck’s Umar sentence. (فِرْعَوْنَ is genitive here, but looks like fatḥa because it is a diptote.)</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 TRANSITIVE -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--ver-d);background:var(--ver-l)">Transitive · مُتَعَدٍّ</span>
+      <h2 class="title"><span class="ar">الفِعْلُ المُتَعَدِّي</span>The action lands on an object</h2>
+      <div class="exrow"><span class="phrase"><span class="vb">قَرَأَ</span> <span class="sb">إِبْرَاهِيمُ</span> <span class="ob">كِتَابَهُ</span></span><span class="gl">Ibrahim read his book</span></div>
+      <div class="exrow"><span class="phrase"><span class="vb">قَتَلَ</span> <span class="sb">دَاوُودُ</span> <span class="ob">جَالُوتَ</span></span><span class="gl">David killed Goliath</span></div>
+      <div class="exrow"><span class="phrase"><span class="vb">أَكَلَ</span> <span class="sb">زَيْدٌ</span> <span class="ob">الرَّغِيفَ</span></span><span class="gl">Zayd ate the loaf</span></div>
+      <div class="legend"><span><i style="background:var(--rose-l);border:1px solid var(--rose)"></i> verb</span><span><i style="background:var(--blue-l);border:1px solid var(--blue)"></i> doer</span><span><i style="background:var(--teal-l);border:1px solid var(--teal)"></i> object</span></div>
+      <div class="note"><span class="ic">i</span><div>Look at the object endings: all <b>accusative</b>. <span class="ar" style="font-size:17px">جَالُوتَ</span> is a foreign name — a <b>diptote</b> — so it takes fatḥa with <b>no tanwīn</b>, exactly as in your Diptotes lesson.</div></div>
+      <div class="qbox"><div class="tag">From the Qur’an</div>
+        <div class="qitem"><div class="line">وَ<span class="hl">قَتَلَ</span> دَاوُودُ <span class="hl" style="background:var(--teal-l)">جَالُوتَ</span></div><small>Sūrah al-Baqarah, 2:251 — “and David killed Goliath.” The deck’s own example.</small></div>
+        <div class="qitem"><div class="line">إِنَّا ذَهَبْنَا نَسْتَبِقُ وَ<span class="hl">تَرَكْنَا</span> <span class="hl" style="background:var(--teal-l)">يُوسُفَ</span> عِندَ مَتَاعِنَا فَ<span class="hl">أَكَلَهُ</span> الذِّئْبُ</div><small>Sūrah Yūsuf, 12:17 — “We went racing and left Joseph with our things, and the wolf ate him.” One verse shows all three: <b>ذَهَبْنَا</b> is intransitive, while <b>تَرَكْنَا يُوسُفَ</b> and <b>أَكَلَهُ</b> are transitive.</small></div>
+        <div class="qitem"><div class="line"><span class="hl">كَتَبَ</span> رَبُّكُمْ عَلَىٰ نَفْسِهِ <span class="hl" style="background:var(--teal-l)">الرَّحْمَةَ</span></div><small>Sūrah al-An‘ām, 6:54 — “Your Lord has decreed mercy upon Himself.”</small></div>
+        <div class="qitem"><div class="line">فَإِذَا <span class="hl">قَرَأْنَاهُ</span> فَاتَّبِعْ قُرْآنَهُ</div><small>Sūrah al-Qiyāmah, 75:18 — “So when We have recited it, follow its recitation.” The object is the attached pronoun ـهُ.</small></div>
+        <div class="qitem"><div class="line"><span class="hl">خَلَقَ</span> <span class="hl" style="background:var(--teal-l)">السَّمَاوَاتِ</span> وَالْأَرْضَ بِالْحَقِّ</div><small>Sūrah an-Naḥl, 16:3 — “He created the heavens and the earth in truth.”</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 TESTS -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--teal-d);background:var(--teal-l)">Two quick tests</span>
+      <h2 class="title"><span class="ar">كَيْفَ أُمَيِّزُ بَيْنَهُمَا؟</span>How to tell them apart</h2>
+      <div class="rule rule-teal"><b class="h">Test 1 — ask “what?” or “whom?”</b>
+        <span class="ar">قَرَأَ</span> → <i>what did he read?</i> → <span class="ar">كِتَابَهُ</span> ✓ transitive.
+        &nbsp; <span class="ar">جَلَسَ</span> → <i>sat what?</i> → no answer ✗ intransitive.</div>
+      <div class="rule rule-teal"><b class="h">Test 2 — try an attached pronoun</b>
+        A transitive verb takes the object pronoun straight onto its end (you practised this with <span class="ar">كَتَبَهَا</span>). An intransitive verb cannot. Tap each card.</div>
+      <div class="grid g2">
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">قَتَلَ + هُ</div><div class="down">↓</div>
+          <div class="res">✓ قَتَلَهُ</div><div class="gloss">he killed him — transitive, so it works</div><div class="tap">tap ▸</div></div>
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">أَكَلَ + هُ</div><div class="down">↓</div>
+          <div class="res">✓ أَكَلَهُ</div><div class="gloss">he ate it — and in Sūrah Yūsuf, 12:17, the wolf ate him</div><div class="tap">tap ▸</div></div>
+        <div class="icard bad" onclick="this.classList.toggle('open')"><div class="src">جَلَسَ + هُ</div><div class="down">↓</div>
+          <div class="res">✗ جَلَسَهُ → جَلَسَ عَلَيْهِ</div><div class="gloss">intransitive: it needs a preposition first (he sat on it)</div><div class="tap">tap ▸</div></div>
+        <div class="icard bad" onclick="this.classList.toggle('open')"><div class="src">ذَهَبَ + هُ</div><div class="down">↓</div>
+          <div class="res">✗ ذَهَبَهُ → ذَهَبَ إِلَيْهِ</div><div class="gloss">intransitive: he went to him</div><div class="tap">tap ▸</div></div>
+      </div>
+      <div class="note"><span class="ic">i</span><div>In the Qur’an: <span class="ar" style="font-size:17px">فَأَكَلَهُ الذِّئْبُ</span> (12:17) works because أَكَلَ is transitive; for an intransitive verb you find the preposition, as in <span class="ar" style="font-size:17px">فَخَرَجَ مِنْهَا</span> (28:21).</div></div>
+    </div>
+  </section>
+
+  <!-- 5 THREE WAYS -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--ver-d);background:var(--ver-l)">Making a verb transitive</span>
+      <h2 class="title"><span class="ar">طُرُقُ تَعْدِيَةِ الأَفْعَالِ</span>Three ways to turn “stays” into “passes on”</h2>
+      <p class="lead">You already know these shapes from the verb forms lesson — here is the job they do.</p>
+      <div class="grid g3">
+        <div class="way"><span class="tg">Form IV</span><div class="nm">هَمْزَةُ النَّقْل</div><div class="pt">أَفْعَلَ</div>
+          <div class="ex">قَامَ ← أَقَامَ</div><div class="gl">add a hamza in front</div></div>
+        <div class="way"><span class="tg">Form II</span><div class="nm">تَضْعِيفُ العَيْن</div><div class="pt">فَعَّلَ</div>
+          <div class="ex">ذَهَبَ ← ذَهَّبَ</div><div class="gl">double the middle letter</div></div>
+        <div class="way"><span class="tg">Form III</span><div class="nm">أَلِفُ المُشَارَكَة</div><div class="pt">فَاعَلَ</div>
+          <div class="ex">لَعِبَ ← لَاعَبَ</div><div class="gl">add an alif after the first letter</div></div>
+      </div>
+      <div class="qbox"><div class="tag">From the Qur’an — one root, two ways</div>
+        <div class="qitem"><div class="line"><span class="hl">نَزَّلَ</span> عَلَيْكَ الْكِتَابَ بِالْحَقِّ مُصَدِّقًا لِّمَا بَيْنَ يَدَيْهِ وَ<span class="hl">أَنزَلَ</span> التَّوْرَاةَ وَالْإِنجِيلَ</div><small>Sūrah Āl ‘Imrān, 3:3 — “He has sent down to you the Book in truth, confirming what came before it, and He sent down the Torah and the Gospel.” The intransitive نَزَلَ (to descend) becomes transitive both by doubling (نَزَّلَ, Form II) and by the hamza (أَنزَلَ, Form IV).</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 HAMZAT AL-NAQL -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--ver-d);background:var(--ver-l)">Way 1 · Form IV</span>
+      <h2 class="title"><span class="ar">هَمْزَةُ النَّقْل — أَفْعَلَ</span>A hamza carries the action to an object</h2>
+      <div class="rule rule-ver"><b class="h">The idea</b>The doer of the old verb becomes the one <b>affected</b>: “the boy stood” → “the mother made the boy stand.” Tap each card.</div>
+      <div class="grid g2">
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">قَامَ الصَّبِيُّ</div><div class="down">↓</div>
+          <div class="res">أَقَامَتِ الأُمُّ الصَّبِيَّ</div><div class="gloss">the boy stood → the mother stood the boy up. (The boy has gone from subject, ـُ, to object, ـَ.)</div><div class="tap">tap ▸</div></div>
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">خَرَجَ مُحَمَّدٌ</div><div class="down">↓</div>
+          <div class="res">أَخْرَجَ اللهُ الحَيَّ مِنَ المَيِّتِ</div><div class="gloss">Muhammad went out → Allah brought the living out of the dead</div><div class="tap">tap ▸</div></div>
+      </div>
+      <div class="qbox"><div class="tag">From the Qur’an</div>
+        <div class="qitem"><div class="line">إِنَّ الَّذِينَ آمَنُوا وَعَمِلُوا الصَّالِحَاتِ وَ<span class="hl">أَقَامُوا</span> الصَّلَاةَ</div><small>Sūrah al-Baqarah, 2:277 — “those who believe, do good deeds and establish prayer.” قَامَ (to stand) → أَقَامَ (to establish), with the object الصَّلَاةَ.</small></div>
+        <div class="qitem"><div class="line">فَ<span class="hl">أَخْرَجَ</span> بِهِ مِنَ الثَّمَرَاتِ رِزْقًا لَّكُمْ</div><small>Sūrah al-Baqarah, 2:22 — “and brought forth fruits thereby as provision for you.” خَرَجَ → أَخْرَجَ.</small></div>
+        <div class="qitem"><div class="line"><span class="hl">يُخْرِجُ</span> الْحَيَّ مِنَ الْمَيِّتِ</div><small>Sūrah al-An‘ām, 6:95 — “He brings the living out of the dead.” The present tense of the deck’s own example, أَخْرَجَ.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 DOUBLING -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--ver-d);background:var(--ver-l)">Way 2 · Form II</span>
+      <h2 class="title"><span class="ar">تَضْعِيفُ العَيْنِ — فَعَّلَ</span>Doubling the middle letter</h2>
+      <div class="rule rule-ver"><b class="h">The idea</b>Doubling the middle root letter (the ع of فَعَلَ) makes the verb act on something — often as “make X do it” or “do it intensively.” Tap each card.</div>
+      <div class="grid g2">
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">ذَهَبَ مُحَمَّدٌ</div><div class="down">↓</div>
+          <div class="res">ذَهَّبَ يُوسُفُ الحَدِيدَ</div><div class="gloss">Muhammad went → Yusuf gilded the iron</div><div class="tap">tap ▸</div></div>
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">عَلِمَ المُعَلِّمُ</div><div class="down">↓</div>
+          <div class="res">عَلَّمَ المُعَلِّمُ الطَّالِبَ</div><div class="gloss">the teacher knew → the teacher taught the student</div><div class="tap">tap ▸</div></div>
+      </div>
+      <div class="note"><span class="ic">i</span><div><span class="ar" style="font-size:17px">عَلِمَ</span> is already transitive (“knew something”). Doubling it gives “taught”, which can take <b>two</b> objects: the person and the thing taught. Some verbs naturally take two objects, as in the verses below.</div></div>
+      <div class="qbox"><div class="tag">From the Qur’an</div>
+        <div class="qitem"><div class="line"><span class="hl">عَلَّمَ</span> الْإِنسَانَ مَا لَمْ <span class="hl" style="background:var(--teal-l)">يَعْلَمْ</span></div><small>Sūrah al-‘Alaq, 96:5 — “He taught man what he did not know.” عَلَّمَ (Form II) and يَعْلَمْ (the simple verb) side by side; two objects: الْإِنسَانَ and مَا.</small></div>
+        <div class="qitem"><div class="line">فَ<span class="hl">فَهَّمْنَاهَا</span> سُلَيْمَانَ</div><small>Sūrah al-Anbiyā’, 21:79 — “and We made Solomon understand it.” فَهِمَ (to understand) → فَهَّمَ (to make understand), with two objects: ـهَا and سُلَيْمَانَ.</small></div>
+        <div class="qitem"><div class="line">إِنَّا <span class="hl">أَعْطَيْنَاكَ</span> الْكَوْثَرَ</div><small>Sūrah al-Kawthar, 108:1 — “Indeed We have given you al-Kawthar.” Another two-object verb: ـكَ and الْكَوْثَرَ.</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 ALIF -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--ver-d);background:var(--ver-l)">Way 3 · Form III</span>
+      <h2 class="title"><span class="ar">أَلِفُ المُشَارَكَة — فَاعَلَ</span>An alif that brings in a partner</h2>
+      <div class="rule rule-ver"><b class="h">The idea</b>The alif means doing the action <b>with or against someone</b>. That partner becomes the object. Tap each card.</div>
+      <div class="grid g2">
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">لَعِبَ زَيْدٌ</div><div class="down">↓</div>
+          <div class="res">لَاعَبَ زَيْدٌ عَلِيًّا</div><div class="gloss">Zayd played → Zayd played with Ali</div><div class="tap">tap ▸</div></div>
+        <div class="icard" onclick="this.classList.toggle('open')"><div class="src">جَلَسَ الوَلَدُ</div><div class="down">↓</div>
+          <div class="res">جَالَسَ الوَلَدُ أُمَّهُ</div><div class="gloss">the boy sat → the boy sat with his mother</div><div class="tap">tap ▸</div></div>
+      </div>
+      <div class="qbox"><div class="tag">From the Qur’an — Form III verbs with their objects</div>
+        <div class="qitem"><div class="line">قَدْ <span class="hl">جَادَلْتَنَا</span> فَأَكْثَرْتَ جِدَالَنَا</div><small>Sūrah Hūd, 11:32 — “You have disputed with us and been excessive in disputing.” The object is نَا.</small></div>
+        <div class="qitem"><div class="line">الَّذِينَ <span class="hl">يُقَاتِلُونَكُمْ</span></div><small>Sūrah al-Baqarah, 2:190 — “those who fight you.” The object is كُمْ.</small></div>
+        <div class="qitem"><div class="line"><span class="hl">جَاهِدِ</span> الْكُفَّارَ وَالْمُنَافِقِينَ</div><small>Sūrah at-Tawbah, 9:73 — “Strive against the disbelievers and the hypocrites.” Two objects, both accusative.</small></div>
+      </div>
+      <div class="note"><span class="ic">i</span><div>These Qur’anic verbs show the <b>job</b> of the alif. I am not claiming each one comes from an intransitive verb.</div></div>
+    </div>
+  </section>
+
+  <!-- 9 RECAP -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--gold);background:#faf3dc">Recap</span>
+      <h2 class="title" style="font-size:20px">Everything in one place</h2>
+      <table class="recap">
+        <tr><td>Intransitive<br><span class="ar">لازم</span></td><td>No object. Reaches a noun only through a preposition (genitive): <span class="w">جَلَسَ عَلَى، ذَهَبَ إِلَى</span>.</td></tr>
+        <tr><td>Transitive<br><span class="ar">متعدٍّ</span></td><td>Takes an object, in the accusative: <span class="w">قَتَلَ دَاوُودُ جَالُوتَ</span>.</td></tr>
+        <tr><td>The tests</td><td>Ask “what / whom?” · try an attached pronoun (<span class="w">قَتَلَهُ ✓ · جَلَسَهُ ✗</span>).</td></tr>
+        <tr><td>Hamzat al-naql</td><td><span class="w">أَفْعَلَ</span> — <span class="w">قَامَ ← أَقَامَ الصَّلَاةَ</span></td></tr>
+        <tr><td>Doubling</td><td><span class="w">فَعَّلَ</span> — <span class="w">فَهِمَ ← فَهَّمَ، عَلِمَ ← عَلَّمَ</span></td></tr>
+        <tr><td>Alif</td><td><span class="w">فَاعَلَ</span> — a partner as object: <span class="w">لَاعَبَ زَيْدٌ عَلِيًّا</span></td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- 10 QUIZ -->
+  <section class="slide">
+    <div class="panel quiz">
+      <span class="eyebrow" style="color:var(--gold);background:#faf3dc">Quick Check</span>
+      <h2 class="title" style="font-size:20px" id="qtitle">Intransitive or transitive?</h2>
+      <p class="lead">Five questions sort verbs; five ask how a verb was made transitive.</p>
+      <div class="q-count" id="qcount"></div>
+      <div class="q-word ar" id="qword"></div>
+      <div class="q-for" id="qfor"></div>
+      <div class="opts" id="qopts"></div>
+      <div class="fb" id="qfb"></div>
+      <div class="scoreline" id="qscore"></div>
+    </div>
+  </section>
+
+  <!-- 11 ANSWER KEY -->
+  <section class="slide">
+    <div class="panel">
+      <span class="eyebrow" style="color:var(--gold);background:#faf3dc">Reference</span>
+      <h2 class="title" style="font-size:20px">Quiz — questions &amp; answers</h2>
+      <p class="lead">All ten questions, with the answer and the reason.</p>
+      <div id="keyList"></div>
+    </div>
+  </section>
+
+  <!-- 12 DONE -->
+  <section class="slide">
+    <div class="panel hero">
+      <div style="font-size:52px">🎉</div>
+      <div class="ar big" style="font-size:34px">أَحْسَنْتَ!</div>
+      <div class="sub">You can tell when an action stays and when it passes on</div>
+      <p class="lead" style="max-width:620px;margin:0 auto">Ask “what?”, try the pronoun — and remember the three ways Arabic
+        gives a verb an object: a hamza, a doubled letter, or an alif.</p>
+      <div class="chips" style="margin-top:6px">
+        <span class="mini" style="background:var(--blue-l);color:var(--blue-d)">جَلَسَ</span>
+        <span class="mini" style="background:var(--ver-l);color:var(--ver-d)">أَقَامَ</span>
+        <span class="mini" style="background:var(--ver-l);color:var(--ver-d)">عَلَّمَ</span>
+        <span class="mini" style="background:var(--ver-l);color:var(--ver-d)">لَاعَبَ</span>
+      </div>
+      <div style="margin-top:22px"><button class="btn next" onclick="goTo(0)">↺ Start over</button></div>
+    </div>
+  </section>
+
+  <div class="nav">
+    <button class="btn prev" id="prevBtn" onclick="move(-1)">‹ Back</button>
+    <button class="btn next" id="nextBtn" onclick="move(1)">Next ›</button>
+  </div>
+  <p class="kbd-hint">Tip: use the ← and → arrow keys to move between steps</p>
+</div>
+
+<script>
+  const slides=[...document.querySelectorAll('.slide')];
+  const labels=['Intro','Big Idea','Intransitive','Transitive','Two Tests','3 Ways','Hamza','Doubling','Alif','Recap','Quiz','Answer Key','Done'];
+  let cur=0;
+  const dotWrap=document.getElementById('dots');
+  labels.forEach((l,i)=>{const b=document.createElement('button');b.textContent=l;b.onclick=()=>goTo(i);dotWrap.appendChild(b);});
+  const dots=[...dotWrap.children];
+  function render(){
+    slides.forEach((s,i)=>s.classList.toggle('show',i===cur));
+    dots.forEach((d,i)=>d.classList.toggle('active',i===cur));
+    document.getElementById('bar').style.width=(cur/(slides.length-1)*100)+'%';
+    document.getElementById('prevBtn').disabled=cur===0;
+    document.getElementById('nextBtn').style.visibility = cur===slides.length-1?'hidden':'visible';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function move(d){ goTo(Math.min(slides.length-1,Math.max(0,cur+d))); }
+  function goTo(i){ cur=i; render(); }
+  document.addEventListener('keydown',e=>{ if(e.key==='ArrowRight')move(1); if(e.key==='ArrowLeft')move(-1); });
+
+  /* =============== quiz =============== */
+  const LT=['لَازِم — intransitive','مُتَعَدٍّ — transitive'];
+  const METH=['Hamzat al-naql (أَفْعَلَ)','Doubling the middle letter (فَعَّلَ)','Alif of participation (فَاعَلَ)','It was already transitive'];
+  const Q=[
+    {t:'lt', w:'جَلَسَ إِبْرَاهِيمُ عَلَى الكُرْسِيِّ', a:0, why:'No object — the noun after عَلَى is reached through a preposition and is genitive. جَلَسَ is <b>intransitive</b>.'},
+    {t:'lt', w:'قَتَلَ دَاوُودُ جَالُوتَ', a:1, why:'Ask “killed whom?” — جَالُوتَ, an accusative object. <b>Transitive</b> (Sūrah al-Baqarah, 2:251).'},
+    {t:'lt', w:'ذَهَبَ عُمَرُ إِلَى السُّوقِ', a:0, why:'إِلَى السُّوقِ is a preposition phrase, not an object. ذَهَبَ is <b>intransitive</b>.'},
+    {t:'lt', w:'فَأَكَلَهُ الذِّئْبُ', a:1, why:'The pronoun ـهُ is attached straight onto the verb — it is the object. <b>Transitive</b> (Sūrah Yūsuf, 12:17).'},
+    {t:'lt', w:'خَفَّتْ مَوَازِينُهُ', a:0, why:'مَوَازِينُهُ is the doer (it ends in ḍamma), and nothing receives the action. <b>Intransitive</b> (Sūrah al-Mu’minūn, 23:103).'},
+    {t:'m',  w:'أَقَامَتِ الأُمُّ الصَّبِيَّ', a:0, why:'قَامَ + hamza = أَقَامَ, so the boy becomes the object (الصَّبِيَّ). <b>Hamzat al-naql</b>.'},
+    {t:'m',  w:'ذَهَّبَ يُوسُفُ الحَدِيدَ', a:1, why:'The middle letter of ذَهَبَ is doubled — ذَهَّبَ — and now takes الحَدِيدَ. <b>Doubling</b>.'},
+    {t:'m',  w:'لَاعَبَ زَيْدٌ عَلِيًّا', a:2, why:'An alif after the first letter, and a partner (عَلِيًّا) as object. <b>Alif of participation</b>.'},
+    {t:'m',  w:'أَخْرَجَ اللهُ الحَيَّ مِنَ المَيِّتِ', a:0, why:'خَرَجَ + hamza = أَخْرَجَ, now with the object الحَيَّ. <b>Hamzat al-naql</b>.'},
+    {t:'m',  w:'عَلَّمَ المُعَلِّمُ الطَّالِبَ', a:1, why:'The middle letter of عَلِمَ is doubled — عَلَّمَ — giving “taught”. <b>Doubling</b>.'},
+  ];
+  let qi=0, qs=0;
+  function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+  function loadQ(){
+    const q=Q[qi];
+    document.getElementById('qword').textContent=q.w;
+    document.getElementById('qcount').textContent=`Question ${qi+1} of ${Q.length}`;
+    document.getElementById('qtitle').textContent = q.t==='lt' ? 'Intransitive or transitive?' : 'How was this verb made transitive?';
+    document.getElementById('qfor').innerHTML = q.t==='lt' ? 'Look at the verb in this sentence.' : 'Which of the three ways produced the verb?';
+    const opts = q.t==='lt' ? LT.map((o,i)=>({o,i})) : shuffle(METH.map((o,i)=>({o,i})));
+    const wrap=document.getElementById('qopts'); wrap.innerHTML='';
+    opts.forEach(({o,i})=>{
+      const b=document.createElement('button'); b.className='opt'; b.textContent=o; b.dataset.i=i;
+      b.onclick=()=>answer(b,i,q); wrap.appendChild(b);
+    });
+    document.getElementById('qfb').className='fb';
+  }
+  function answer(btn,idx,q){
+    [...document.querySelectorAll('#qopts .opt')].forEach(o=>{ o.disabled=true; if(Number(o.dataset.i)===q.a) o.classList.add('correct'); });
+    const fb=document.getElementById('qfb');
+    if(idx===q.a){qs++; fb.className='fb ok show'; fb.innerHTML='✅ Correct! '+q.why;}
+    else{btn.classList.add('wrong'); fb.className='fb no show'; fb.innerHTML='Not quite. '+q.why;}
+    qi++;
+    if(qi<Q.length){ setTimeout(loadQ,2400); }
+    else{ setTimeout(()=>{document.getElementById('qscore').textContent=`Score: ${qs} / ${Q.length}`;},1500); }
+  }
+  function buildKey(){
+    const wrap=document.getElementById('keyList');
+    Q.forEach((q,i)=>{
+      const label = q.t==='lt' ? LT[q.a] : METH[q.a];
+      const row=document.createElement('div'); row.className='keyrow';
+      row.innerHTML=`<div class="qn">${i+1}</div><div class="body">
+        <span class="phrase ar">${q.w}</span> <span class="verdict">${label}</span>
+        <div class="why">${q.why}</div></div>`;
+      wrap.appendChild(row);
+    });
+  }
+  loadQ(); buildKey(); render();
+</script>
+</body>
+</html>
